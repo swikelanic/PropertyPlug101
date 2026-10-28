@@ -16,11 +16,16 @@
     "bcryptjs": "latest",
     "better-sqlite3": "latest",
     "express": "latest",
+    "express-rate-limit": "^8.7.1",
+    "helmet": "^8.3.0",
     "lucide-react": "latest",
     "multer": "latest",
     "react": "latest",
     "react-dom": "latest",
+    "sharp": "^0.35.5",
     "vite": "latest"
   },
-  "devDependencies": { "concurrently": "latest" }
+  "devDependencies": {
+    "concurrently": "latest"
+  }
 }

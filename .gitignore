@@ -5,3 +5,8 @@ server/data/*.sqlite-shm
 server/data/*.sqlite-wal
 server/uploads/*
 !server/uploads/.gitkeep
+
+.env
+.env.*
+!.env.example
+server/staging/*
