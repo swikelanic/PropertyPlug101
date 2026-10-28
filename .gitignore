@@ -1,0 +1,7 @@
+node_modules/
+dist/
+server/data/*.sqlite
+server/data/*.sqlite-shm
+server/data/*.sqlite-wal
+server/uploads/*
+!server/uploads/.gitkeep
