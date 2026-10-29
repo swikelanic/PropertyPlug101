@@ -3,6 +3,10 @@
     {
       "source": "/bond-calculator",
       "destination": "/index.html"
+    },
+    {
+      "source": "/sold-properties",
+      "destination": "/index.html"
     }
   ],
   "headers": [
