@@ -1,4 +1,10 @@
 {
+  "rewrites": [
+    {
+      "source": "/bond-calculator",
+      "destination": "/index.html"
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",
