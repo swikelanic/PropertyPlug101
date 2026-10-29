@@ -36,7 +36,7 @@ const soldPropertyExamples=[
   {id:'sold-3',type:'Townhouse',price:'R 3,520,000',address:'7 Olive Lane',area:'Parkhurst, Johannesburg',beds:3,baths:2,size:'181 m²',date:'April 2026',image:'https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1000&q=85'}
 ];
 const socialProfiles=[
-  {name:'WhatsApp',href:'https://wa.me/27727052163',mark:'whatsapp'},
+  {name:'WhatsApp',href:'https://wa.me/27615347183',mark:'whatsapp'},
   {name:'Instagram',href:'https://www.instagram.com/propertyplug101/',mark:'instagram'},
   {name:'Twitter / X',href:'',mark:'twitter'},
   {name:'YouTube',href:'https://youtube.com/@propertyplug101',mark:'youtube'},
