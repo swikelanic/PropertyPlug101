@@ -38,7 +38,7 @@ const soldPropertyExamples=[
 const socialProfiles=[
   {name:'WhatsApp',href:'https://wa.me/27615347183',mark:'whatsapp'},
   {name:'Instagram',href:'https://www.instagram.com/propertyplug101/',mark:'instagram'},
-  {name:'Twitter / X',href:'',mark:'twitter'},
+  {name:'Twitter / X',href:'https://x.com/PropertyPlug101',mark:'twitter'},
   {name:'YouTube',href:'https://youtube.com/@propertyplug101',mark:'youtube'},
   {name:'TikTok',href:'https://www.tiktok.com/@propertyplug101',mark:'tiktok'}
 ];
