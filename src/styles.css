@@ -32,3 +32,4 @@
 .photo-watermark{position:absolute;z-index:4;right:12px;bottom:32px;padding:5px 7px;border-radius:2px;background:#1720198a;color:#fff;font:600 8px var(--display);letter-spacing:.4px;text-shadow:0 1px 3px #0008;pointer-events:none;user-select:none}.property-details-photo .photo-watermark{bottom:42px;font-size:10px}.sold-photo .photo-watermark{bottom:12px}.property-photo img,.property-details-photo>img,.sold-photo img,.logo-mark img{-webkit-user-drag:none;user-select:none}
 .property-summary{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;color:#777f76;font-size:8px;line-height:1.55;margin:0 0 11px;min-height:25px}.property-address{margin-bottom:8px}
 .social-facebook{color:#1877f2}.social-link.social-facebook svg path{fill:currentColor;stroke:none}
+.sold-card{cursor:pointer}.sold-card:focus-visible{outline:3px solid #1976d2;outline-offset:3px}.details-sold-date{margin:-12px 0 16px;color:#77836c;font-size:9px;font-weight:700}
