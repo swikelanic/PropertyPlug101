@@ -45,6 +45,11 @@ db.exec(`
     contact_email TEXT NOT NULL,
     contact_phone TEXT NOT NULL,
     description TEXT NOT NULL DEFAULT '',
+    beds INTEGER,
+    baths INTEGER,
+    parking INTEGER,
+    floor_area INTEGER,
+    features TEXT NOT NULL DEFAULT '[]',
     photos TEXT NOT NULL DEFAULT '[]',
     status TEXT NOT NULL DEFAULT 'published',
     created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -59,6 +64,12 @@ db.exec(`
     created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
   );
 `);
+
+// Add listing detail fields when upgrading an existing local database.
+const propertyColumns = new Set(db.prepare('PRAGMA table_info(properties)').all().map(column => column.name));
+for (const [name, definition] of [['beds', 'INTEGER'], ['baths', 'INTEGER'], ['parking', 'INTEGER'], ['floor_area', 'INTEGER'], ['features', "TEXT NOT NULL DEFAULT '[]'"]]) {
+  if (!propertyColumns.has(name)) db.exec(`ALTER TABLE properties ADD COLUMN ${name} ${definition}`);
+}
 
 const app = express();
 app.disable('x-powered-by');
@@ -172,15 +183,15 @@ const upload = multer({
   }
 });
 function propertyResponse(row) {
-  return { ...row, photos: JSON.parse(row.photos), price: row.price === null ? null : Number(row.price) };
+  return { ...row, photos: JSON.parse(row.photos), features: JSON.parse(row.features || '[]'), price: row.price === null ? null : Number(row.price) };
 }
 app.get('/api/properties', (_req, res) => {
-  const rows = db.prepare(`SELECT id, user_id AS userId, type, deal, price, address, area, description, photos, status, created_at AS createdAt
+  const rows = db.prepare(`SELECT id, user_id AS userId, type, deal, price, address, area, description, beds, baths, parking, floor_area AS floorArea, features, photos, status, created_at AS createdAt
     FROM properties WHERE status = 'published' ORDER BY id DESC`).all();
   res.json({ properties: rows.map(propertyResponse) });
 });
 app.get('/api/my/properties', requireUser, (req, res) => {
-  const rows = db.prepare(`SELECT id, user_id AS userId, type, deal, price, address, area, description, photos, status, created_at AS createdAt
+  const rows = db.prepare(`SELECT id, user_id AS userId, type, deal, price, address, area, description, beds, baths, parking, floor_area AS floorArea, features, photos, status, created_at AS createdAt
     FROM properties WHERE user_id = ? ORDER BY id DESC`).all(req.user.id);
   res.json({ properties: rows.map(propertyResponse) });
 });
@@ -194,16 +205,25 @@ app.post('/api/properties', propertyLimiter, requireSameOrigin, requireUser, upl
   const contactName = String(req.body.name || '').trim();
   const contactEmail = String(req.body.email || '').trim().toLowerCase();
   const contactPhone = String(req.body.phone || '').trim();
-  const description = String(req.body.notes || '').trim().slice(0, 2000);
+  const description = String(req.body.description || '').trim().slice(0, 4000);
+  const optionalCount = name => { const raw = String(req.body[name] ?? '').trim(); if (!raw) return null; const value = Number(raw); return Number.isInteger(value) && value >= 0 && value <= 50 ? value : NaN; };
+  const beds = optionalCount('beds');
+  const baths = optionalCount('baths');
+  const parking = optionalCount('parking');
+  const rawFloorArea = String(req.body.floorArea ?? '').trim();
+  const floorArea = rawFloorArea ? Number(rawFloorArea) : null;
+  const features = String(req.body.features || '').split(',').map(feature => feature.trim()).filter(Boolean).slice(0, 20);
   const rawPrice = String(req.body.price || '').trim();
   const price = rawPrice ? Number(rawPrice) : null;
   if (!allowedTypes.has(type) || !['Sell', 'Rent out'].includes(dealValue) ||
       address.length < 3 || address.length > 200 || area.length < 2 || area.length > 160 ||
       contactName.length < 2 || contactName.length > 100 ||
       !/^\S+@\S+\.\S+$/.test(contactEmail) || contactPhone.length < 5 || contactPhone.length > 40 ||
-      (price !== null && (!Number.isSafeInteger(price) || price < 1))) {
+      (price !== null && (!Number.isSafeInteger(price) || price < 1)) ||
+      [beds, baths, parking].some(value => Number.isNaN(value)) ||
+      (floorArea !== null && (!Number.isInteger(floorArea) || floorArea < 1 || floorArea > 100000)) || description.length < 20) {
     await removeFiles(stagedFiles);
-    return res.status(400).json({ error: 'Check the property type, address, area, contact details, and asking price.' });
+    return res.status(400).json({ error: 'Check the property type, address, area, contact details, description, and property specifications.' });
   }
   if (!stagedFiles.length) return res.status(400).json({ error: 'Add at least one property photo.' });
   const storedFiles = [];
@@ -226,9 +246,9 @@ app.post('/api/properties', propertyLimiter, requireSameOrigin, requireUser, upl
   await removeFiles(stagedFiles);
   try {
     const photos = storedFiles.map(file => '/uploads/' + path.basename(file));
-    const result = db.prepare('INSERT INTO properties (user_id, type, deal, price, address, area, contact_name, contact_email, contact_phone, description, photos) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)')
-      .run(req.user.id, type, deal, price, address, area, contactName, contactEmail, contactPhone, description, JSON.stringify(photos));
-    const row = db.prepare('SELECT id, user_id AS userId, type, deal, price, address, area, description, photos, status, created_at AS createdAt FROM properties WHERE id = ?')
+    const result = db.prepare('INSERT INTO properties (user_id, type, deal, price, address, area, contact_name, contact_email, contact_phone, description, beds, baths, parking, floor_area, features, photos) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)')
+      .run(req.user.id, type, deal, price, address, area, contactName, contactEmail, contactPhone, description, beds, baths, parking, floorArea, JSON.stringify(features), JSON.stringify(photos));
+    const row = db.prepare('SELECT id, user_id AS userId, type, deal, price, address, area, description, beds, baths, parking, floor_area AS floorArea, features, photos, status, created_at AS createdAt FROM properties WHERE id = ?')
       .get(Number(result.lastInsertRowid));
     res.status(201).json({ property: propertyResponse(row) });
   } catch (error) {
