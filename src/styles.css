@@ -51,3 +51,11 @@
 .property-details-photo:focus-visible{outline:3px solid #1884cf;outline-offset:-3px}
 @media(max-width:700px){.gallery-swipe-hint{left:10px;bottom:9px;padding:6px 8px;font-size:6px}.photo-count{right:10px;bottom:9px}}
 .property-open-layer{touch-action:pan-y}
+
+/* Property sharing */
+.details-actions{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:9px;margin-top:4px}
+.details-actions .details-enquire{width:100%}
+.details-share{min-width:138px;border-color:#dfe4d9;background:#fff;color:#385440}
+.details-share:hover{background:#eef1e8;border-color:#cfd8c8}
+.share-status{margin:9px 0 0;color:#527052;font-size:9px;line-height:1.5;overflow-wrap:anywhere}
+@media(max-width:700px){.details-actions{grid-template-columns:1fr}.details-share{width:100%}}
