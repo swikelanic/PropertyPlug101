@@ -122,8 +122,8 @@ function HelpSection({onBuy,onSell,onList}){
   return <section className="help-section section-wrap" id="next-step">
     <div className="help-heading"><div><div className="eyebrow"><span/> FIND YOUR NEXT STEP</div><h2>What do you need <em>help with?</em></h2><p>Tell us where you are in your property journey. We’ll connect you with the right kind of support.</p></div><a className="text-link" href="#agents">Meet the team <ArrowUpRight size={16}/></a></div>
     <div className="help-options">
-      <button className="help-option" type="button" onClick={onBuy}><span className="help-number">01</span><span className="help-option-title">I’m buying</span><span className="help-option-description">Pre-approval, viewing guidance, offers and the transfer process.</span><span className="help-option-action">Get buyer guidance <ArrowUpRight size={16}/></span></button>
-      <button className="help-option" type="button" onClick={onSell}><span className="help-number">02</span><span className="help-option-title">I’m selling</span><span className="help-option-description">Get advice on a private sale or full, in-person agent support.</span><span className="help-option-action">Get selling support <ArrowUpRight size={16}/></span></button>
+      <button className="help-option" type="button" onClick={onBuy}><span className="help-option-title">I’m buying</span><span className="help-option-description">Pre-approval, viewing guidance, offers and the transfer process.</span><span className="help-option-action">Get buyer guidance <ArrowUpRight size={16}/></span></button>
+      <button className="help-option" type="button" onClick={onSell}><span className="help-option-title">I’m selling</span><span className="help-option-description">Get advice on a private sale or full, in-person agent support.</span><span className="help-option-action">Get selling support <ArrowUpRight size={16}/></span></button>
     </div>
     <p className="help-listing-link">Ready to list? <button type="button" onClick={onList}>Start with your property details <ArrowRight size={14}/></button></p>
   </section>
