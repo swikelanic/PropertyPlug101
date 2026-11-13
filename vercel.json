@@ -11,6 +11,10 @@
     {
       "source": "/purchasing-process",
       "destination": "/index.html"
+    },
+    {
+      "source": "/property-videos",
+      "destination": "/index.html"
     }
   ],
   "headers": [
