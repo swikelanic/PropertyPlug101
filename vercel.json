@@ -7,6 +7,10 @@
     {
       "source": "/sold-properties",
       "destination": "/index.html"
+    },
+    {
+      "source": "/purchasing-process",
+      "destination": "/index.html"
     }
   ],
   "headers": [
