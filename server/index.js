@@ -70,6 +70,8 @@ const propertyColumns = new Set(db.prepare('PRAGMA table_info(properties)').all(
 for (const [name, definition] of [['beds', 'INTEGER'], ['baths', 'INTEGER'], ['parking', 'INTEGER'], ['floor_area', 'INTEGER'], ['features', "TEXT NOT NULL DEFAULT '[]'"]]) {
   if (!propertyColumns.has(name)) db.exec(`ALTER TABLE properties ADD COLUMN ${name} ${definition}`);
 }
+const enquiryColumns = new Set(db.prepare('PRAGMA table_info(enquiries)').all().map(column => column.name));
+if (!enquiryColumns.has('gross_salary')) db.exec('ALTER TABLE enquiries ADD COLUMN gross_salary INTEGER');
 
 const app = express();
 app.disable('x-powered-by');
@@ -262,10 +264,12 @@ app.post('/api/enquiries', enquiryLimiter, requireSameOrigin, (req, res) => {
   const phone = String(req.body?.phone || '').trim();
   const area = String(req.body?.area || '').trim();
   const message = String(req.body?.message || '').trim();
-  if (name.length < 2 || name.length > 100 || !/^\S+@\S+\.\S+$/.test(email) || phone.length < 5 || phone.length > 40 || area.length < 2 || area.length > 160 || message.length < 5 || message.length > 2000) {
+  const grossSalaryValue = req.body?.grossSalary;
+  const grossSalary = grossSalaryValue == null || grossSalaryValue === '' ? null : Number(grossSalaryValue);
+  if (name.length < 2 || name.length > 100 || !/^\S+@\S+\.\S+$/.test(email) || phone.length < 5 || phone.length > 40 || area.length < 2 || area.length > 160 || message.length < 5 || message.length > 2000 || (grossSalary !== null && (!Number.isSafeInteger(grossSalary) || grossSalary < 1 || grossSalary > 100000000))) {
     return res.status(400).json({ error: 'Complete each field with valid contact details.' });
   }
-  const result = db.prepare('INSERT INTO enquiries (name, email, phone, area, message) VALUES (?, ?, ?, ?, ?)').run(name, email, phone, area, message);
+  const result = db.prepare('INSERT INTO enquiries (name, email, phone, area, message, gross_salary) VALUES (?, ?, ?, ?, ?, ?)').run(name, email, phone, area, message, grossSalary);
   res.status(201).json({ enquiry: { id: Number(result.lastInsertRowid), message: 'Your enquiry has been received.' } });
 });
 

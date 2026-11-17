@@ -77,3 +77,4 @@
 
 /* Property specific contact actions */
 .details-actions{grid-template-columns:repeat(2,minmax(0,1fr));align-items:stretch}.details-actions .button{display:flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:11px 12px;text-align:center;font-size:10px}.details-actions .details-enquire{width:100%}.button-whatsapp{border:1px solid #188a58;background:#168c59;color:#fff}.button-whatsapp:hover{background:#11784b;border-color:#11784b}.button-whatsapp:focus-visible{outline:3px solid #a7e5c4;outline-offset:2px}@media(max-width:700px){.details-actions{grid-template-columns:1fr}.details-actions .button{min-height:46px}}
+.salary-note{display:block;margin-top:5px;color:#788174;font-size:9px;font-weight:400;line-height:1.5}
